@@ -3,7 +3,7 @@ import sbt.{ given, * }
 // Common settings (applied to all subprojects in sbt 2.x)
 organization := "lv.id.jc"
 version      := "0.1.0-SNAPSHOT"
-scalaVersion := "3.8.4"
+scalaVersion := "3.9.0"
 
 description := "Dice Chess webhook bot in Scala: the engine's Monte-Carlo search on the JVM, containerised for Google Cloud Run."
 
