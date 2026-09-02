@@ -3,6 +3,7 @@ package dicechess.bot
 import dicechess.engine.domain.{FenParser, Move}
 import dicechess.engine.search.{ClockState, MonteCarloSearch, TimeManager}
 
+import java.security.SecureRandom
 import scala.util.Random
 
 /** The move-choosing brain: the engine's Monte-Carlo search, driven by the game clock.
@@ -46,7 +47,7 @@ final class Strategy(overheadBufferMs: Long, defaultThinkMs: Long):
         System.err.println(s"[bot] unusable dfen: $reason")
         Nil
       case Right(state) =>
-        val rng = new Random()
+        val rng = new Random(new SecureRandom())
         val scored = remainingMillis match
           case Some(remaining) if remaining > 0 =>
             val clock         = ClockState(remainingMs = remaining, incrementMs = incrementMillis, moveNumber = state.fullMoveNumber)
