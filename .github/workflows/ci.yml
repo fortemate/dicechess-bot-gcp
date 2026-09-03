@@ -35,7 +35,7 @@ jobs:
         uses: sbt/setup-sbt@v1
 
       - name: Run tests
-        run: sbt 'testOnly *'
+        run: sbt --batch 'testOnly *'
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
         uses: sbt/setup-sbt@v1
 
       - name: Build fat jar
-        run: sbt assembly
+        run: sbt --batch assembly
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

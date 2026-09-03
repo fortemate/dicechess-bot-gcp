@@ -5,7 +5,7 @@
 FROM eclipse-temurin:25-jre
 
 WORKDIR /app
-COPY target/out/jvm/scala-3.8.4/dicechess-bot-gcp/dicechess-bot-gcp.jar /app/app.jar
+COPY target/out/jvm/scala-3.9.0/dicechess-bot-gcp/dicechess-bot-gcp.jar /app/app.jar
 
 # Cloud Run routes requests to $PORT (default 8080); Main reads it. EXPOSE is documentation only.
 ENV PORT=8080
