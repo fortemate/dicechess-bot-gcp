@@ -68,11 +68,31 @@ jobs:
         run: |
           JAR=$(find target/out -type f -name 'dicechess-bot-gcp.jar' -print -quit)
           test -n "$JAR" || (echo "JAR not found" && exit 1)
-          DICECHESS_WEBHOOK_SECRET=smoke PORT=8099 java -jar "$JAR" &
-          sleep 3
-          RESPONSE=$(curl -s -X POST http://127.0.0.1:8099/api/webhook \
+
+          LOG="$RUNNER_TEMP/boot-smoke.log"
+          DICECHESS_WEBHOOK_SECRET=smoke PORT=8099 java -jar "$JAR" >"$LOG" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          fail() {
+            echo "$1"
+            echo "--- server output ---"
+            cat "$LOG" || true
+            exit 1
+          }
+
+          # Wait for the JVM to bind the port instead of guessing with a fixed sleep;
+          # a loaded runner can need well over three seconds to get there.
+          DEADLINE=$((SECONDS + 30))
+          until (exec 3<>/dev/tcp/127.0.0.1/8099) 2>/dev/null; do
+            kill -0 "$SERVER_PID" 2>/dev/null || fail "server exited before binding port 8099"
+            [ "$SECONDS" -lt "$DEADLINE" ] || fail "server did not bind port 8099 within 30s"
+            sleep 0.5
+          done
+          echo "server bound port 8099 after ${SECONDS}s"
+
+          RESPONSE=$(curl -sS --max-time 10 -X POST http://127.0.0.1:8099/api/webhook \
             -H "Content-Type: application/json" \
-            -d '{"type":"verification","nonce":"ci-smoke"}')
+            -d '{"type":"verification","nonce":"ci-smoke"}') || fail "handshake request failed"
           echo "handshake response: $RESPONSE"
-          echo "$RESPONSE" | grep -q '"nonce":"ci-smoke"' || (echo "handshake failed" && exit 1)
-          kill %1
+          echo "$RESPONSE" | grep -q '"nonce":"ci-smoke"' || fail "handshake failed"
