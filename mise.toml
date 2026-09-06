@@ -1,0 +1,20 @@
+[tools]
+java = "temurin-25" # Primary runtime, aligned with CI (Java 25)
+sbt = "2.0.8" # sbt runner; MUST match sbt.version in project/build.properties (also provisions the Jules VM)
+gh = "latest"
+
+[tasks.compile]
+description = "🔨 Compile main and test sources"
+run = "sbt --batch 'compile; Test/compile'"
+
+[tasks.test]
+description = "🧪 Run the test suite"
+run = "sbt --batch 'testOnly *'"
+
+[tasks.check]
+description = "✅ Repository gate — mirrors ci.yaml"
+run = "sbt --batch 'clean; testOnly *'"
+
+[tasks.format]
+description = "🎨 No formatter is configured in this repository yet (scalafmt adoption tracked separately)"
+run = "echo 'no formatter configured in this repository'"
