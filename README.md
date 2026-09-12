@@ -52,7 +52,7 @@ The container is also simpler: no native-image build, no reflection config.
 
 ## Licensing
 
-**AGPL-3.0**, because it links the AGPL engine. Forks and experiments are welcome — derived bots
+**AGPL-3.0-only**, because it links the AGPL-3.0-only engine. Forks and experiments are welcome — derived bots
 stay AGPL. If you want a **closed-source** bot, the legal moves are already on the wire: fork a
 transport-only MIT starter ([Scala](https://github.com/rabestro/dicechess-bot-scala),
 [TypeScript](https://github.com/rabestro/dicechess-bot-typescript),
