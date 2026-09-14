@@ -38,7 +38,7 @@ class MainSuite extends munit.FunSuite:
       assertEquals(parse(handshake.body()).toOption.get.hcursor.get[String]("nonce"), Right("live-1"))
 
       val body =
-        s"""{"type":"yourTurn","gameId":"g1","seat":"White","state":{"dfen":"$initialNbk","clocks":{"white":800,"black":800},"timeControl":{"Fischer":{"initialSeconds":300,"incrementSeconds":3}}}}"""
+        s"""{"type":"yourTurn","gameId":"g1","seat":"White","state":{"version":1,"activeSeat":"White","dicePending":true,"dfen":"$initialNbk","clocks":{"white":800,"black":800},"timeControl":{"Fischer":{"initialSeconds":300,"incrementSeconds":3}}}}"""
       val ts   = System.currentTimeMillis() / 1000
       val turn = post(
         body,

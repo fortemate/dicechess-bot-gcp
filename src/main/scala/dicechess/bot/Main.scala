@@ -1,9 +1,8 @@
 package dicechess.bot
 
 import com.sun.net.httpserver.HttpServer
-import com.fortemate.dicechess.runtime.{CustomHandlerServer, TurnContext, WebhookHandler}
+import com.fortemate.dicechess.runtime.{BotStrategy, CustomHandlerServer, TurnAction, TurnContext, WebhookHandler}
 
-import java.util.function.{Function => JFunction}
 import scala.jdk.CollectionConverters.*
 
 /** The Cloud Run entry point. All webhook/HTTP-server plumbing — HMAC verification, the ownership
@@ -49,14 +48,14 @@ object Main:
   def start(port: Int, secret: String, strategy: Strategy): HttpServer =
     CustomHandlerServer.start(port, WebhookPath, new WebhookHandler(secret, adapt(strategy)))
 
-  /** `dicechess-bot-runtime`'s strategy shape is a plain `java.util.function.Function` — a Scala
-    * lambda converts to it via SAM automatically. Monte-Carlo needs the clock, so this reads
-    * `ctx.clock()` (null for an untimed game): the mover's remaining time and the Fischer increment,
+  /** `dicechess-bot-runtime`'s strategy shape is `BotStrategy` — a SAM interface whose `onTurn`
+    * method accepts a `TurnContext` and returns a `TurnAction`. Monte-Carlo needs the clock, so this
+    * reads `ctx.clock()` (null for an untimed game): the mover's remaining time and the Fischer increment,
     * both delivered on the wire since runtime 0.2.0. A missing increment coalesces to `0`.
     */
-  private def adapt(strategy: Strategy): JFunction[TurnContext, java.util.List[String]] =
+  private def adapt(strategy: Strategy): BotStrategy =
     (ctx: TurnContext) =>
       val clock     = Option(ctx.clock())
       val remaining = clock.map(_.remainingMillis())
       val increment = clock.flatMap(c => Option(c.incrementMillis())).fold(0L)(_.longValue)
-      strategy.chooseMoves(ctx.dfen(), remaining, increment).asJava
+      TurnAction(strategy.chooseMoves(ctx.dfen(), remaining, increment).asJava)
