@@ -1,6 +1,6 @@
 [tools]
 java = "temurin-25" # Primary runtime, aligned with CI (Java 25)
-sbt = "2.0.8" # sbt runner; MUST match sbt.version in project/build.properties (also provisions the Jules VM)
+sbt = "2.0.9" # sbt runner; MUST match sbt.version in project/build.properties (also provisions the Jules VM)
 gh = "latest"
 
 [tasks.compile]
