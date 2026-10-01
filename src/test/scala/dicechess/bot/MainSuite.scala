@@ -5,14 +5,13 @@ import dicechess.engine.search.TurnGenerator
 import io.circe.parser.parse
 import com.fortemate.dicechess.runtime.{Signatures, WebhookHandler}
 
-/** Proves `Main`'s wiring — the library's `WebhookHandler`/`CustomHandlerServer` talking to our
-  * real engine-backed, clock-aware `Strategy`, end to end over a real socket. The webhook mechanics
-  * themselves (signature verification, the handshake, malformed input, ...) are
-  * `dicechess-bot-runtime`'s own responsibility and are covered there; this suite only shows that
-  * plugging our strategy into the library produces a legal engine move on a signed, clocked turn.
+/** Proves `Main`'s wiring — the library's `WebhookHandler`/`CustomHandlerServer` talking to our real engine-backed,
+  * clock-aware `Strategy`, end to end over a real socket. The webhook mechanics themselves (signature verification, the
+  * handshake, malformed input, ...) are `dicechess-bot-runtime`'s own responsibility and are covered there; this suite
+  * only shows that plugging our strategy into the library produces a legal engine move on a signed, clocked turn.
   *
-  * A small clock in the payload exercises the time-managed path; a tiny remaining time keeps the
-  * search deadline in the tens of milliseconds so the test stays fast.
+  * A small clock in the payload exercises the time-managed path; a tiny remaining time keeps the search deadline in the
+  * tens of milliseconds so the test stays fast.
   */
 class MainSuite extends munit.FunSuite:
 

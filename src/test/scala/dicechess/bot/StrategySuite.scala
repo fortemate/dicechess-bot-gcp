@@ -3,10 +3,10 @@ package dicechess.bot
 import dicechess.engine.domain.FenParser
 import dicechess.engine.search.TurnGenerator
 
-/** The engine does the chess; this suite only proves the wiring: a tiny wall-clock budget still
-  * yields one of the engine's own legal turn paths (Monte-Carlo always returns the best material
-  * candidate as a fallback, so a legal move comes back even if the deadline elapses before any
-  * rollout completes), the no-clock path works, and an unusable DFEN degrades to a pass.
+/** The engine does the chess; this suite only proves the wiring: a tiny wall-clock budget still yields one of the
+  * engine's own legal turn paths (Monte-Carlo always returns the best material candidate as a fallback, so a legal move
+  * comes back even if the deadline elapses before any rollout completes), the no-clock path works, and an unusable DFEN
+  * degrades to a pass.
   */
 class StrategySuite extends munit.FunSuite:
 
