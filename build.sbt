@@ -1,4 +1,4 @@
-import sbt.{ given, * }
+import sbt.{given, *}
 
 // Common settings (applied to all subprojects in sbt 2.x)
 organization := "lv.id.jc"
@@ -38,23 +38,23 @@ val MunitVersion               = "1.3.6"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "dicechess-bot-gcp",
+    name                := "dicechess-bot-gcp",
     Compile / mainClass := Some("dicechess.bot.Main"),
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies ++= Seq(
       // The whole point: the real engine as a dependency — MonteCarloSearch, TimeManager,
       // FenParser, TurnGenerator. Pulls circe transitively (engine's OpeningBookParser).
-      "com.fortemate" %% "dicechess-engine"     % DiceChessEngineVersion,
+      "com.fortemate" %% "dicechess-engine" % DiceChessEngineVersion,
       // Plain `%`, not `%%` — a Java artifact, not cross-built per Scala version: HMAC signing,
       // the ownership handshake, TurnContext, and the JDK HttpServer (CustomHandlerServer).
-      "com.fortemate" % "dicechess-bot-runtime" % DiceChessBotRuntimeVersion,
-      "io.circe"      %% "circe-parser"         % "0.14.16" % Test,
-      "org.scalameta" %% "munit"                % MunitVersion % Test
+      "com.fortemate"  % "dicechess-bot-runtime" % DiceChessBotRuntimeVersion,
+      "io.circe"      %% "circe-parser"          % "0.14.16"    % Test,
+      "org.scalameta" %% "munit"                 % MunitVersion % Test
     ),
     // One runnable fat jar the Cloud Run container executes. A fixed output path (not the
     // cross-version target dir) keeps the Dockerfile's COPY deterministic.
     // In sbt 2.x, assembly settings need to be scoped to the assembly task
-    assembly / mainClass := Some("dicechess.bot.Main"),
+    assembly / mainClass       := Some("dicechess.bot.Main"),
     assembly / assemblyJarName := "dicechess-bot-gcp.jar",
     // In sbt 2.x, target.value resolves to target/out/jvm/scala-<ver>/<project>/
     // so we need to adjust the path accordingly
@@ -62,14 +62,13 @@ lazy val root = (project in file("."))
     // Pragmatic merge for a single-main fat jar: drop signatures/manifests/module-info, concat
     // service registries, take-first for the rest (no library here needs a smarter policy).
     assembly / assemblyMergeStrategy := {
-      case PathList("META-INF", xs @ _*)
-          if xs.nonEmpty && {
+      case PathList("META-INF", xs @ _*) if xs.nonEmpty && {
             val n = xs.last.toLowerCase; n.endsWith(".sf") || n.endsWith(".dsa") || n.endsWith(".rsa")
           } =>
         MergeStrategy.discard
-      case PathList("META-INF", "MANIFEST.MF")       => MergeStrategy.discard
-      case PathList("META-INF", "services", _ @ _*)  => MergeStrategy.concat
-      case x if x.endsWith("module-info.class")      => MergeStrategy.discard
-      case _                                         => MergeStrategy.first
+      case PathList("META-INF", "MANIFEST.MF")     => MergeStrategy.discard
+      case PathList("META-INF", "services", _ @_*) => MergeStrategy.concat
+      case x if x.endsWith("module-info.class")    => MergeStrategy.discard
+      case _                                       => MergeStrategy.first
     }
   )

@@ -35,7 +35,7 @@ jobs:
         uses: sbt/setup-sbt@v1
 
       - name: Run tests
-        run: sbt --batch 'testOnly *'
+        run: sbt --batch 'scalafmtCheckAll; scalafmtSbtCheck; testOnly *'
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

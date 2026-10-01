@@ -1,6 +1,7 @@
 [tools]
 java = "temurin-25" # Primary runtime, aligned with CI (Java 25)
 sbt = "2.0.9" # sbt runner; MUST match sbt.version in project/build.properties (also provisions the Jules VM)
+scalafmt = "3.11.1"
 gh = "latest"
 
 [tasks.compile]
@@ -13,8 +14,12 @@ run = "sbt --batch 'testOnly *'"
 
 [tasks.check]
 description = "✅ Repository gate — mirrors ci.yaml"
-run = "sbt --batch 'clean; testOnly *'"
+run = "sbt --batch 'clean; scalafmtCheckAll; scalafmtSbtCheck; testOnly *'"
 
 [tasks.format]
-description = "🎨 No formatter is configured in this repository yet (scalafmt adoption tracked separately)"
-run = "echo 'no formatter configured in this repository'"
+description = "🎨 Format Scala sources and sbt build files"
+run = "sbt --batch 'scalafmtAll; scalafmtSbt'"
+
+[tasks."format:check"]
+description = "🔍 Check formatting of Scala sources and sbt build files"
+run = "sbt --batch 'scalafmtCheckAll; scalafmtSbtCheck'"
