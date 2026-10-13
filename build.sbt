@@ -48,7 +48,7 @@ lazy val root = (project in file("."))
       // Plain `%`, not `%%` — a Java artifact, not cross-built per Scala version: HMAC signing,
       // the ownership handshake, TurnContext, and the JDK HttpServer (CustomHandlerServer).
       "com.fortemate"  % "dicechess-bot-runtime" % DiceChessBotRuntimeVersion,
-      "io.circe"      %% "circe-parser"          % "0.14.16"    % Test,
+      "io.circe"      %% "circe-parser"          % "0.14.17"    % Test,
       "org.scalameta" %% "munit"                 % MunitVersion % Test
     ),
     // One runnable fat jar the Cloud Run container executes. A fixed output path (not the
