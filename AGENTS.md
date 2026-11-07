@@ -16,6 +16,14 @@ is unavailable, follow the repository's setup documentation and report any gate 
 
 <!-- /dc-shared:definition-of-done -->
 
+## Toolchain PATH prerequisite
+
+Before running any Definition of Done command, make the installed `mise` executable available on PATH.
+If it was installed in `~/.local/bin`, use `export PATH="$HOME/.local/bin:$PATH"` in a POSIX shell;
+for another installation, add that executable's actual directory instead. Then run `mise install`,
+`mise run format` and `mise run check`. This PATH prerequisite also applies to the sandbox fallback gate.
+The absolute formatting fallback above applies only when `mise` is installed at the stated path.
+
 ## Architecture Overview
 - **Domain**: Production Dice Chess webhook bot running the engine's Monte-Carlo rollout search on the JVM in Google Cloud Run.
 - **Dependencies**: Links `@fortemate/dicechess-engine` (MonteCarloSearch, FenParser, TimeManager) and `dicechess-bot-runtime` (CustomHandlerServer, HMAC-SHA256 verification).
