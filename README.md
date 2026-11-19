@@ -64,7 +64,7 @@ transport-only MIT starter ([Scala](https://github.com/rabestro/dicechess-bot-sc
 | --- | --- |
 | `src/main/scala/dicechess/bot/Strategy.scala` | Monte-Carlo search driven by the engine's `TimeManager`; DFEN in, UCI path out. **Swap the algorithm here.** |
 | `src/main/scala/dicechess/bot/Main.scala` | Wires `Strategy` into [`dicechess-bot-runtime`](https://github.com/fortemate/dicechess-bot-runtime)'s `WebhookHandler`/`CustomHandlerServer`, binding Cloud Run's `$PORT`. |
-| `Dockerfile` | Runtime-only image (`eclipse-temurin:25-jre`) over the `sbt assembly` fat jar. |
+| `Dockerfile` | Runtime-only non-root image (`eclipse-temurin:25-jre-noble`) over `target/dicechess-bot-gcp.jar`. |
 
 HMAC verification, the ownership handshake, `TurnContext`, and the JDK `HttpServer` itself are
 [`dicechess-bot-runtime`](https://github.com/fortemate/dicechess-bot-runtime)
@@ -86,7 +86,7 @@ curl -X POST localhost:8080/api/webhook -d '{"type":"verification","nonce":"x"}'
 ## Deploy to Cloud Run
 
 ```bash
-# 1. Build the fat jar (needs the read:packages token).
+# 1. Build target/dicechess-bot-gcp.jar (needs the read:packages token).
 sbt assembly
 
 # 2. Build and push an amd64 image (Cloud Run does not run arm64 images — the --platform flag

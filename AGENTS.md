@@ -32,8 +32,8 @@ The absolute formatting fallback above applies only when `mise` is installed at 
 ## Developer Workflows
 - **Build**: `sbt compile` (Java 25+, Scala 3.8.4).
 - **Tests**: `sbt "testOnly *"` (munit test suites).
-- **Assembly**: `sbt assembly` (produces runnable fat jar `target/out/jvm/scala-3.8.4/dicechess-bot-gcp/dicechess-bot-gcp.jar`).
-- **Container**: `docker build -t dicechess-bot-gcp .` (packages the assembled jar on `eclipse-temurin:25-jre`).
+- **Assembly**: `sbt assembly` (produces runnable fat jar `target/dicechess-bot-gcp.jar`).
+- **Container**: `docker build -t dicechess-bot-gcp .` (packages the assembled jar on `eclipse-temurin:25-jre-noble` as non-root).
 
 ## Publication boundary
 
