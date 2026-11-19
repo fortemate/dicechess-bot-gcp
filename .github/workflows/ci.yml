@@ -101,4 +101,4 @@ jobs:
         run: docker build --tag dicechess-bot-gcp:ci .
 
       - name: Smoke-run the non-root image
-        run: python3 scripts/smoke_container.py dicechess-bot-gcp:ci
+        run: python3 scripts/smoke_container.py

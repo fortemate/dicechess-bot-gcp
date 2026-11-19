@@ -3,13 +3,13 @@ import hashlib
 import hmac
 import json
 import subprocess
-import sys
 import time
 import urllib.error
 import urllib.request
 import uuid
 
 FIXTURE_KEY = "authored-container-smoke-fixture"
+SMOKE_IMAGE = "dicechess-bot-gcp:ci"
 HANDSHAKE = {"type": "verification", "nonce": "container-smoke"}
 
 
@@ -38,7 +38,7 @@ def wait_ready(url, container):
             status, body = request(url, HANDSHAKE)
             assert status == 200 and json.loads(body) == {"nonce": "container-smoke"}
             return
-        except (OSError, urllib.error.URLError):
+        except OSError:
             assert docker("inspect", "--format={{.State.Running}}", container) == "true"
             time.sleep(0.1)
     raise TimeoutError("Container did not serve a valid handshake within 45 seconds")
@@ -71,7 +71,7 @@ def check_contracts(url):
     assert all(isinstance(move, str) for move in moves)
 
 
-def main(image):
+def main():
     name = "gcp-container-smoke-" + uuid.uuid4().hex[:12]
     container = None
     try:
@@ -79,7 +79,7 @@ def main(image):
             "run", "--detach", "--name", name, "--cpus=2", "--memory=512m", "--read-only",
             "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m", "--env", "PORT=8080",
             "--env", "DICECHESS_WEBHOOK_SECRET=" + FIXTURE_KEY,
-            "--publish", "127.0.0.1::8080", image,
+            "--publish", "127.0.0.1::8080", "--", SMOKE_IMAGE,
         )
         assert docker("exec", container, "id", "-u") == "10001"
         assert docker("exec", container, "id", "-g") == "10001"
@@ -97,4 +97,4 @@ def main(image):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main()
