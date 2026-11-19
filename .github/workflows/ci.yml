@@ -66,8 +66,8 @@ jobs:
 
       - name: Smoke-run the jar (handshake)
         run: |
-          JAR=$(find target/out -type f -name 'dicechess-bot-gcp.jar' -print -quit)
-          test -n "$JAR" || (echo "JAR not found" && exit 1)
+          JAR=target/dicechess-bot-gcp.jar
+          test -f "$JAR" || (echo "JAR not found" && exit 1)
 
           LOG="$RUNNER_TEMP/boot-smoke.log"
           DICECHESS_WEBHOOK_SECRET=smoke PORT=8099 java -jar "$JAR" >"$LOG" 2>&1 &
@@ -96,3 +96,9 @@ jobs:
             -d '{"type":"verification","nonce":"ci-smoke"}') || fail "handshake request failed"
           echo "handshake response: $RESPONSE"
           echo "$RESPONSE" | grep -q '"nonce":"ci-smoke"' || fail "handshake failed"
+
+      - name: Build runtime image
+        run: docker build --tag dicechess-bot-gcp:ci .
+
+      - name: Smoke-run the non-root image
+        run: python3 scripts/smoke_container.py dicechess-bot-gcp:ci

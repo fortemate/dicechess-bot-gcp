@@ -56,9 +56,8 @@ lazy val root = (project in file("."))
     // In sbt 2.x, assembly settings need to be scoped to the assembly task
     assembly / mainClass       := Some("dicechess.bot.Main"),
     assembly / assemblyJarName := "dicechess-bot-gcp.jar",
-    // In sbt 2.x, target.value resolves to target/out/jvm/scala-<ver>/<project>/
-    // so we need to adjust the path accordingly
-    assembly / assemblyOutputPath := target.value / "dicechess-bot-gcp.jar",
+    // Resolve from the project root because sbt 2.x makes target.value cross-version specific.
+    assembly / assemblyOutputPath := baseDirectory.value / "target" / "dicechess-bot-gcp.jar",
     // Pragmatic merge for a single-main fat jar: drop signatures/manifests/module-info, concat
     // service registries, take-first for the rest (no library here needs a smarter policy).
     assembly / assemblyMergeStrategy := {
